@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import in.tech_camp.ajax_app_java.entity.PostEntity;
 import in.tech_camp.ajax_app_java.form.PostForm;
 import in.tech_camp.ajax_app_java.repository.PostRepository;
-import lombok.AllArgsConstructor;
 
 @Controller
-@AllArgsConstructor
 public class PostController {
 
   private final PostRepository postRepository;
+
+  // ★これが必要
+  public PostController(PostRepository postRepository) {
+    this.postRepository = postRepository;
+  }
 
   @GetMapping("/")
   public String showList(Model model) {
@@ -25,17 +28,11 @@ public class PostController {
     return "posts/index";
   }
 
-  // @GetMapping("/postForm")
-  // public String showPostForm(@ModelAttribute("postForm") PostForm form){
-  //     return "posts/postForm";
-  // }
-
   @PostMapping("/posts")
-  public String savePost(@ModelAttribute("postForm") PostForm form){
+  public String savePost(@ModelAttribute("postForm") PostForm form) {
     PostEntity post = new PostEntity();
     post.setContent(form.getContent());
     postRepository.insert(post);
     return "redirect:/";
   }
-  
 }
